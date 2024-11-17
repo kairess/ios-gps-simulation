@@ -262,15 +262,16 @@ class WalkingSimulator:
         finally:
             self.cleanup()
 
-async def main():
-    simulator = await WalkingSimulator.create(
-        host='fdd1:612f:7b92::1',
-        port=58513,
-        walking_speed_kmh=5.0
-    )
+async def main(rsd_address, rsd_port):
+    while True:
+        simulator = await WalkingSimulator.create(
+            host=rsd_address,
+            port=rsd_port,
+            walking_speed_kmh=5.0
+        )
 
-    # GPX 파일을 기반으로 도보 시뮬레이션
-    simulator.simulate_walking_with_gpx('test.gpx')
+        # GPX 파일을 기반으로 도보 시뮬레이션
+        simulator.simulate_walking_with_gpx('test.gpx')
 
     # 수동으로 경유지 설정하여 도보 시뮬레이션
     # WAYPOINTS = [
@@ -284,4 +285,5 @@ async def main():
 
 if __name__ == "__main__":
     import asyncio
-    asyncio.run(main())
+    import sys
+    asyncio.run(main(rsd_address=sys.argv[1], rsd_port=sys.argv[2]))
